@@ -1,0 +1,68 @@
+# syntax=docker/dockerfile:1
+
+# Use Alpine Linux with Ruby 3.3.6
+FROM ruby:3.3.6-alpine AS base
+
+# Install basic dependencies
+RUN apk add --no-cache \
+    curl \
+    tzdata \
+    postgresql-client \
+    shared-mime-info \
+    && rm -rf /var/cache/apk/*
+
+# Set working directory
+WORKDIR /app
+
+# Set environment variables
+ENV RAILS_ENV=development \
+    BUNDLE_PATH=/usr/local/bundle
+
+# Build stage
+FROM base AS build
+
+# Install build dependencies
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    postgresql-dev \
+    git \
+    yaml-dev \
+    linux-headers \
+    && rm -rf /var/cache/apk/*
+
+# Copy Gemfile and Gemfile.lock from backend directory
+COPY backend/Gemfile backend/Gemfile.lock ./
+
+# Install gems
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
+
+# Copy the entire backend application
+COPY backend/ ./
+
+# Remove build dependencies to reduce image size
+RUN apk del .build-deps
+
+# Final stage
+FROM base
+
+# Copy installed gems and application from build stage
+COPY --from=build ${BUNDLE_PATH} ${BUNDLE_PATH}
+COPY --from=build /app /app
+
+# Create rails user for security
+RUN addgroup -g 1000 rails && \
+    adduser -D -u 1000 -G rails rails && \
+    chown -R rails:rails /app
+
+# Switch to rails user
+USER rails:rails
+
+# Expose port 3000 (default Rails port)
+EXPOSE 3000
+
+# Set the entrypoint
+ENTRYPOINT ["/app/bin/docker-entrypoint"]
+
+# Default command to start Rails server
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
