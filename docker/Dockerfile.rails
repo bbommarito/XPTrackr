@@ -30,15 +30,15 @@ RUN apk add --no-cache --virtual .build-deps \
     linux-headers \
     && rm -rf /var/cache/apk/*
 
-# Copy Gemfile and Gemfile.lock from backend directory
-COPY backend/Gemfile backend/Gemfile.lock ./
+# Copy Gemfile and Gemfile.lock from backend directory (relative to project root)
+COPY ../backend/Gemfile ../backend/Gemfile.lock ./
 
 # Install gems
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 # Copy the entire backend application
-COPY backend/ ./
+COPY ../backend/ ./
 
 # Remove build dependencies to reduce image size
 RUN apk del .build-deps
