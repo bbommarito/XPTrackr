@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.rails
+    volumes:
+      - gems:/usr/local/bundle
+      - ./backend:/app
+    env_file:
+      - .env
+    environment:
+      - RAILS_ENV=development
+      - BUNDLE_WITHOUT=
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+
+volumes:
+  gems:
