@@ -1,192 +1,111 @@
 # XPTrackr
 
-> **"Because every habit deserves loot."**
-
-XPTrackr is a gamified habit tracker that transforms daily routines into rewarding quests. Users complete habits, gain XP, collect Grit, level up, and build momentum—just like in your favorite RPG.
+XPTrackr is a gamified habit tracker designed to reward consistency, not just completion. Build real-life momentum by earning XP, leveling up, and collecting Grit—your personal currency for progress.
 
 ---
 
-## 📘 Table of Contents
+## 🚀 Purpose
 
-- [Concept](#concept)
-- [Tech Stack](#tech-stack)
-- [Folder Structure](#folder-structure)
-- [Development Setup](#development-setup)
-- [Backend (Rails)](#backend-rails)
-- [Frontend (Vite + Vue)](#frontend-vite--vue)
-- [Deployment Strategy](#deployment-strategy)
-- [Stack Rationale](#stack-rationale)
-- [Acknowledgments](#acknowledgments)
+To create a fun, personalized way to track habits and self-discipline using XP-based progression. This tool is built for developers, productivity nerds, and anyone who enjoys leveling up their life like it’s an RPG.
 
 ---
 
-## 🎯 Concept
+## 🧱 Stack
 
-- Habits are treated as **daily quests**
-- Completing them earns **XP** and **Grit**
-- Users **level up** and track streaks
-- **Grit** is a secondary currency used for rewards and customization
-- Core XP formula:
+- **Frontend:** Nuxt 3 (Vue 3 + Composition API + Pinia)
+- **Backend:** Ruby on Rails API
+- **Database:** PostgreSQL
+- **Auth:** Magic link (passwordless)
+- **Dev Tools:** Docker, GitHub Actions, RSpec
+
+---
+
+## 🔐 Authentication
+
+XPTrackr uses a **passwordless, magic link–based login system** to reduce friction and support a more user-friendly experience.
+
+- Users enter their email and receive a time-limited login link
+- If the email is not yet registered, an account is created automatically
+- No passwords are stored or required at any point
+- All sessions are cookie-based to support simple, secure authentication
+
+During development, a **dev-only endpoint** is available:
+
+```
+POST /dev/instant_login/:email
+```
+
+This allows developers to instantly simulate a login session for any valid email, bypassing the need to check email clients while testing.
+
+This setup replaces the originally proposed Devise/session approach to prioritize simplicity and flexibility in a solo or small-team context.
+
+---
+
+## 🎮 XP System
+
+XP is awarded based on consistency and effort—not just raw completion. A formula like the following will guide XP distribution:
 
 ```ruby
-def xp_to_next_level(level)
-  (100 * level**1.5).to_i
-end
+xp = (habit.difficulty * 10) + (streak_days * 2)
 ```
 
----
-
-## 🛠️ Tech Stack
-
-| Layer      | Tech            | Notes                             |
-|------------|------------------|-----------------------------------|
-| Backend    | Ruby on Rails    | API-first, optional HTML views   |
-| Frontend   | Vite + Vue       | Composition API, with Pinia store|
-| Auth       | Devise (Rails)   | Cookie or token-based auth       |
-| Dev Tools  | Docker (optional)| Containerized local dev          |
+This can be adjusted as the system evolves.
 
 ---
 
-## 🗂️ Folder Structure
+## 🪙 Currency: Grit
 
-```
-xptrackr/
-├── backend/             # Rails API app
-│   ├── app/
-│   ├── config/
-│   └── ...
-├── frontend/            # Vite + Vue app
-│   ├── src/
-│   ├── public/
-│   └── ...
-├── docker-compose.yml   # Optional
-└── README.md
-```
+**Grit** is the in-app currency, earned alongside XP. It can be spent to unlock cosmetic features, motivational boosts, or other rewards (to be determined).
 
 ---
 
-## 🧪 Development Setup
+## 🐳 Local Development
 
-### Backend (Rails)
+Use Docker and `dotenv-rails` for local environment setup.
 
-```bash
-cd backend
-bundle install
-rails db:create db:migrate
-rails server
-```
-
-Ensure `rack-cors` is configured in `config/initializers/cors.rb`:
-
-```ruby
-Rails.application.config.middleware.insert_before 0, Rack::Cors do
-  allow do
-    origins 'http://localhost:5173'
-    resource '*',
-      headers: :any,
-      methods: [:get, :post, :patch, :put, :delete, :options],
-      credentials: true
-  end
-end
-```
+1. Create a `.env` file with your `DATABASE_URL`
+2. Run `docker-compose up --build`
+3. Backend will be available at `localhost:3000`, frontend TBD
 
 ---
 
-### Frontend (Vue + Vite)
+## ✅ MVP Features
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Install Vue and Pinia:
-
-```bash
-npm install vue@next pinia
-```
-
-Set up API proxy in `vite.config.js`:
-
-```js
-export default {
-  server: {
-    proxy: {
-      '/api': 'http://localhost:3000',
-    },
-  },
-};
-```
-
-Use Composition API and Pinia for state management.
+- [ ] Habit creation & streak tracking
+- [ ] XP gain system
+- [ ] Grit rewards
+- [ ] Magic link–based auth
+- [ ] Healthcheck endpoint
+- [ ] GitHub Actions integration (tests/lint)
 
 ---
 
-## 🌐 Deployment Strategy
+## 🧠 Why This Stack?
 
-| Subdomain        | Purpose             |
-|------------------|---------------------|
-| app.xptrackr.com | Frontend (Vue/Vite build) |
-| api.xptrackr.com | Rails backend API   |
-
-Use cookie-based auth with `domain: .xptrackr.com` to allow session sharing across subdomains.
+- **Vue + Pinia** over React/Redux for safer reactivity and less boilerplate
+- **Rails API** for rapid backend dev and support for server-side auth/session cookies
+- **Docker** for consistency across dev/test environments
+- **GitHub Projects** to simulate team-style planning and tracking
 
 ---
 
-## ✨ Rewards System
+## 📝 License
 
-### XP (Experience Points)
-Used to track user level and overall progression.
-
-### Grit (In-App Currency)
-**Grit** is earned by consistent effort and used for in-app rewards.
-
-#### 💰 How to Earn Grit
-
-| Action                             | Grit Earned |
-|------------------------------------|-------------|
-| Complete a daily habit             | +2 Grit     |
-| Complete all habits for the day    | +10 Grit    |
-| Maintain a 3-day streak            | +5 Grit     |
-| Weekly consistency (7-day streak)  | +15 Grit    |
-| First-time completion of new habit | +5 Grit     |
-| Level up                           | +20 Grit    |
-
-#### 🛍️ What to Spend Grit On
-- Avatar customization
-- UI themes and effects
-- Titles, stickers, and lore unlocks
-- Buffs (e.g. streak protection, XP boost)
-- Cosmetic or narrative rewards
+TBD — currently closed for development, intended to be open-sourced.
 
 ---
 
-## 💭 Stack Rationale
+## 🤖 AI Disclaimer
 
-This stack was chosen intentionally for clarity, speed, and future scalability:
-
-### Why Rails?
-- Rails offers a pragmatic, well-supported API backend.
-- Devise makes authentication easy without writing boilerplate.
-- Built-in support for both APIs and optional HTML views allows fast MVP development and landing pages.
-- It aligns with patterns used in real-world government/enterprise platforms, including VA infrastructure.
-
-### Why Vue + Pinia?
-- Vue’s Composition API offers safer, more modular state and logic handling than React's useEffect-driven flow.
-- Pinia is lightweight but powerful—it feels natural for both small projects and enterprise-scale state management.
-- Vue is approachable but doesn't sacrifice capability, making it ideal for solo or small team development.
-
-### Why Not React?
-- While React is ubiquitous, it can become verbose or finicky when handling shared state.
-- Redux Toolkit helps, but still introduces conceptual overhead that isn’t necessary for XPTrackr.
-- Vue’s ecosystem made faster progress for this project's goals.
+This project was scoped and refined with the help of ChatGPT, but **all design and implementation decisions are mine**. AI was used to structure ideas and support rapid iteration—not to replace my thinking.
 
 ---
 
-## 🙏 Acknowledgments
+## 🌍 Open Source Announcement
 
-This project was built with brainstorming support from ChatGPT. While AI tools were used to help generate ideas and organize this README, **all concepts, naming, and development choices are my own**.
+XPTrackr will be open source and fully transparent. You can view the live GitHub board and project progress here:
 
----
+- 🗂️ [Project Board](https://github.com/users/bbommarito/projects/1)
+- 📦 [Repository](https://github.com/bbommarito/XPTrackr)
 
-Happy tracking!
+Feedback welcome!
