@@ -1,4 +1,15 @@
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: xptrackr_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   backend:
     build:
       context: .
@@ -9,13 +20,15 @@ services:
     env_file:
       - .env
     environment:
-      - RAILS_ENV=development
       - BUNDLE_WITHOUT=
     ports:
       - "3000:3000"
     stdin_open: true
     tty: true
     command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    depends_on:
+      - db
 
 volumes:
   gems:
+  postgres_data:
