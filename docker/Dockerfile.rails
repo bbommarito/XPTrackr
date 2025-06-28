@@ -30,6 +30,9 @@ RUN apk add --no-cache --virtual .build-deps \
     linux-headers \
     && rm -rf /var/cache/apk/*
 
+# Install bundler version 2.6
+RUN gem install bundler -v '~> 2.6'
+
 # Copy Gemfile and Gemfile.lock from backend directory (relative to project root)
 COPY ../backend/Gemfile ../backend/Gemfile.lock ./
 
