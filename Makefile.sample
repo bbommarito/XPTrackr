@@ -1,0 +1,89 @@
+.PHONY: help up down build restart logs shell console
+
+# Default target - show help
+help:
+	@echo "Available commands:"
+	@echo "  make up          - Start all services"
+	@echo "  make down        - Stop all services"
+	@echo "  make build       - Build containers"
+	@echo "  make restart     - Restart backend service"
+	@echo "  make logs        - Show backend logs"
+	@echo ""
+	@echo "Rails commands:"
+	@echo "  make console     - Rails console"
+	@echo "  make migrate     - Run migrations"
+	@echo "  make rollback    - Rollback last migration"
+	@echo "  make seed        - Run database seeds"
+	@echo "  make reset       - Reset database"
+	@echo ""
+	@echo "Test commands:"
+	@echo "  make test        - Run all tests"
+	@echo "  make test-migrate - Run test migrations"
+	@echo ""
+	@echo "Bundle commands:"
+	@echo "  make bundle      - Bundle install"
+	@echo "  make bundle-update - Bundle update"
+	@echo ""
+	@echo "Generators:"
+	@echo "  make gen-model name=User fields='name:string email:string'"
+	@echo "  make gen-controller name=Users"
+	@echo "  make gen-migration name=AddEmailToUsers"
+
+# Docker Compose commands
+up:
+	docker-compose up
+
+down:
+	docker-compose down
+
+build:
+	docker-compose build
+
+restart:
+	docker-compose restart backend
+
+logs:
+	docker-compose logs -f backend
+
+shell:
+	docker-compose exec backend sh
+
+# Rails commands
+console:
+	docker-compose exec backend ./bin/rails console
+
+migrate:
+	docker-compose exec backend ./bin/rails db:migrate
+
+rollback:
+	docker-compose exec backend ./bin/rails db:rollback
+
+seed:
+	docker-compose exec backend ./bin/rails db:seed
+
+reset:
+	docker-compose exec backend ./bin/rails db:reset
+
+# Test commands
+test:
+	docker-compose exec -e RAILS_ENV=test backend ./bin/rails test
+
+test-migrate:
+	docker-compose exec -e RAILS_ENV=test backend ./bin/rails db:migrate
+
+# Bundle commands
+bundle:
+	docker-compose exec backend bundle install
+
+bundle-update:
+	docker-compose exec backend bundle update
+
+# Generators (with parameters)
+gen-model:
+	docker-compose exec backend ./bin/rails generate model $(name) $(fields)
+
+gen-controller:
+	docker-compose exec backend ./bin/rails generate controller $(name)
+
+gen-migration:
+	docker-compose exec backend ./bin/rails generate migration $(name)
