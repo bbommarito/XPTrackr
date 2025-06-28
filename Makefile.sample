@@ -53,37 +53,37 @@ console:
 	docker-compose exec backend ./bin/rails console
 
 migrate:
-	docker-compose exec backend ./bin/rails db:migrate
+	docker-compose run --rm backend ./bin/rails db:migrate
 
 rollback:
-	docker-compose exec backend ./bin/rails db:rollback
+	docker-compose run --rm backend ./bin/rails db:rollback
 
 seed:
-	docker-compose exec backend ./bin/rails db:seed
+	docker-compose run --rm backend ./bin/rails db:seed
 
 reset:
-	docker-compose exec backend ./bin/rails db:reset
+	docker-compose run --rm backend ./bin/rails db:reset
 
 # Test commands
 test:
-	docker-compose exec -e RAILS_ENV=test backend ./bin/rails test
+	docker-compose run --rm -e RAILS_ENV=test backend ./bin/rails test
 
 test-migrate:
-	docker-compose exec -e RAILS_ENV=test backend ./bin/rails db:migrate
+	docker-compose run --rm -e RAILS_ENV=test backend ./bin/rails db:migrate
 
 # Bundle commands
 bundle:
-	docker-compose exec backend bundle install
+	docker-compose run --rm backend bundle install
 
 bundle-update:
-	docker-compose exec backend bundle update
+	docker-compose run --rm backend bundle update
 
 # Generators (with parameters)
 gen-model:
-	docker-compose exec backend ./bin/rails generate model $(name) $(fields)
+	docker-compose run --rm backend ./bin/rails generate model $(name) $(fields)
 
 gen-controller:
-	docker-compose exec backend ./bin/rails generate controller $(name)
+	docker-compose run --rm backend ./bin/rails generate controller $(name)
 
 gen-migration:
-	docker-compose exec backend ./bin/rails generate migration $(name)
+	docker-compose run --rm backend ./bin/rails generate migration $(name)
