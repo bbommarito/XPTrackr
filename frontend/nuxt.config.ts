@@ -14,12 +14,11 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        target: 'http://backend:3000',
-        changeOrigin: true,
-        prependPath: true
+        target: process.env.NUXT_API_TARGET || 'http://localhost:3000',
+        changeOrigin: true
       },
       '/health': {
-        target: 'http://backend:3000',
+        target: process.env.NUXT_API_TARGET || 'http://localhost:3000',
         changeOrigin: true
       }
     }
