@@ -29,6 +29,19 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3001:3000"
+    environment:
+      HOST: 0.0.0.0
+    command: ["npm", "run", "dev"]
+    depends_on:
+      - backend
+
 volumes:
   gems:
   postgres_data:
