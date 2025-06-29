@@ -7,8 +7,20 @@ if [ -f "/app/tmp/pids/server.pid" ]; then
     rm -f /app/tmp/pids/server.pid
 fi
 
-# Ensure tmp/pids directory exists
+# Ensure required directories exist with proper permissions
 mkdir -p /app/tmp/pids
+mkdir -p /app/log
+mkdir -p /app/tmp/cache
+
+# Ensure the rails user owns the app directory and subdirectories
+# This is important for CI environments where volumes may have different ownership
+if [ "$(id -u)" = "1000" ]; then
+    # We're running as the rails user, try to fix permissions if possible
+    # Only do this if we have write access to the parent directory
+    if [ -w "/app" ]; then
+        chmod -R 755 /app/tmp /app/log 2>/dev/null || true
+    fi
+fi
 
 # Ensure bundle directory has correct permissions
 # This handles cases where the volume is mounted fresh

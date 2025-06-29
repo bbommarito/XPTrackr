@@ -6,7 +6,7 @@ RSpec.describe "Health check" do
 
     expect(response).to have_http_status(:ok)
     expect(response.content_type).to eq("application/json; charset=utf-8")
-    
+
     json_response = JSON.parse(response.body)
     expect(json_response["status"]).to eq("ok")
   end

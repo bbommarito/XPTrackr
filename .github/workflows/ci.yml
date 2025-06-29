@@ -31,7 +31,7 @@ jobs:
       run: docker compose build backend
 
     - name: Run StandardRB linter
-      run: docker compose run --rm backend bundle exec standardrb
+      run: docker compose run --rm --user root backend bundle exec standardrb
 
   test:
     runs-on: ubuntu-latest
@@ -61,11 +61,11 @@ jobs:
 
     - name: Setup test database
       run: |
-        docker compose run --rm -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:password@db:5432/xptrackr backend bundle exec rails db:create db:migrate
+        docker compose run --rm --user root -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:password@db:5432/xptrackr backend bundle exec rails db:create db:migrate
 
     - name: Run RSpec tests
       run: |
-        docker compose run --rm -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:password@db:5432/xptrackr backend bundle exec rspec
+        docker compose run --rm --user root -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:password@db:5432/xptrackr backend bundle exec rspec
 
     - name: Stop services
       run: docker compose down
