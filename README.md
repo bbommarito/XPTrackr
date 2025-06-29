@@ -49,23 +49,44 @@ XP is awarded based on consistency and effort—not just raw completion. A formu
 xp = (habit.difficulty * 10) + (streak_days * 2)
 ```
 
+XP increases with both task difficulty and habit streaks, rewarding not just what you do, but how consistently you do it.
+
 This can be adjusted as the system evolves.
 
 ---
 
 ## 🪙 Currency: Grit
 
-**Grit** is the in-app currency, earned alongside XP. It can be spent to unlock cosmetic features, motivational boosts, or other rewards (to be determined).
+**Grit** is the in-app currency, earned alongside XP. It can be spent to unlock in-app rewards and serve as a symbol of long-term consistency.
+
+Grit can be spent to unlock:
+- Cosmetic badges or UI themes
+- Temporary XP multipliers
+- Personal milestones or motivational boosts
+
+These features are still evolving and will expand post-MVP.
 
 ---
 
 ## 🐳 Local Development
 
-Use Docker and `dotenv-rails` for local environment setup.
+XPTrackr uses Docker for a consistent development environment across systems.
 
-1. Create a `.env` file with your `DATABASE_URL`
+To get started:
+
+1. Copy `.env.example` to `.env` and configure your `DATABASE_URL`
 2. Run `docker-compose up --build`
-3. Backend will be available at `localhost:3000`, frontend TBD
+3. Backend will be available at `http://localhost:3000`
+4. Frontend (Nuxt) will be available at `http://localhost:3001` (TBD) across all platforms.
+
+**Quick Start:**
+1. `cp .env.sample .env`
+2. `docker-compose up`
+3. Backend available at `localhost:3000`
+
+📋 **For detailed setup instructions, see [Getting Started Guide](doc/GETTING_STARTED.md)**
+
+The guide covers database setup, common commands, troubleshooting, and development workflows.
 
 ---
 

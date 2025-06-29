@@ -1,0 +1,26 @@
+# Database configuration using DATABASE_URL environment variable
+# DATABASE_URL format: postgresql://username:password@host:port/database_name
+# 
+# This configuration will use DATABASE_URL when provided, falling back to
+# the specific settings below if DATABASE_URL is not set.
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: postgres
+  password: password
+  host: db
+  port: 5432
+
+development:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_development?') %>
+
+test:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_test?') %>
+
+staging:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_staging?') %>
+
+production:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_production?') %>

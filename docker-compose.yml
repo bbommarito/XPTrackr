@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: xptrackr
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.rails
+    volumes:
+      - gems:/usr/local/bundle
+      - ./backend:/app
+    env_file:
+      - .env
+    environment:
+      - BUNDLE_WITHOUT=
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    depends_on:
+      - db
+
+  # Frontend service (optional - can run locally for better DX)
+  # Uncomment to run frontend in Docker:
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   volumes:
+  #     - ./frontend:/app
+  #   ports:
+  #     - "3001:3000"
+  #   environment:
+  #     HOST: 0.0.0.0
+  #     NUXT_API_TARGET: http://backend:3000
+  #   command: ["npm", "run", "dev"]
+  #   depends_on:
+  #     - backend
+
+volumes:
+  gems:
+  postgres_data:
