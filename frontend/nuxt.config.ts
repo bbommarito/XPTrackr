@@ -10,23 +10,10 @@ export default defineNuxtConfig({
     port: 3000
   },
   
-  // Proxy configuration for API requests
-  nitro: {
-    devProxy: {
-      '/api': {
-        target: process.env.NUXT_API_TARGET || 'http://localhost:3000',
-        changeOrigin: true
-      },
-      '/health': {
-        target: process.env.NUXT_API_TARGET || 'http://localhost:3000',
-        changeOrigin: true
-      }
-    }
-  },
-  
-  // Runtime config for environment variables
+  // Runtime config
   runtimeConfig: {
     // Private keys (only available on server-side)
+    backendUrl: process.env.NUXT_API_TARGET || 'http://localhost:3000',
     // Public keys (exposed to client-side)
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api'
