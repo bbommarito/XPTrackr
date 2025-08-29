@@ -167,6 +167,7 @@ jobs:
         sed -i "s/DB_HOST=.*/DB_HOST=127.0.0.1/" .env.dusk.local
         sed -i "s/DB_USERNAME=.*/DB_USERNAME=root/" .env.dusk.local
         sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=password/" .env.dusk.local
+        sed -i "s|APP_URL=.*|APP_URL=http://127.0.0.1:8000|" .env.dusk.local
 
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -208,6 +209,10 @@ jobs:
         DB_USERNAME: root
         DB_PASSWORD: password
       run: php artisan serve --no-reload &
+
+    - name: Wait for server to be ready
+      run: |
+        timeout 30 bash -c 'until curl -s http://127.0.0.1:8000 > /dev/null; do sleep 1; done'
 
     - name: Run Dusk Tests
       env:
