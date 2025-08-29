@@ -1,11 +1,149 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@source "../**/*.blade.php";
+@source "../**/*.js";
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+@source "../../storage/framework/views/*.php";
+
+@plugin "daisyui";
+
+/* XPTrackr Light Theme */
+@plugin "daisyui/theme" {
+  name: "xptrackr";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Base colors */
+  --color-base-100: oklch(100% 0 0);           /* #ffffff */
+  --color-base-200: oklch(98% 0.005 240);      /* #F9FAFB */
+  --color-base-300: oklch(96% 0.01 240);       /* #F3F4F6 */
+  --color-base-content: oklch(25% 0.02 240);   /* #1F2937 */
+  
+  /* Primary - Confident Blue */
+  --color-primary: oklch(62% 0.22 259);        /* #3B82F6 */
+  --color-primary-content: oklch(100% 0 0);    /* #ffffff */
+  
+  /* Secondary - Grit Purple */
+  --color-secondary: oklch(62% 0.25 295);      /* #8B5CF6 */
+  --color-secondary-content: oklch(100% 0 0);  /* #ffffff */
+  
+  /* Accent - Motivational Amber */
+  --color-accent: oklch(75% 0.18 85);          /* #F59E0B */
+  --color-accent-content: oklch(100% 0 0);     /* #ffffff */
+  
+  /* Neutral */
+  --color-neutral: oklch(25% 0.02 240);        /* #1F2937 */
+  --color-neutral-content: oklch(96% 0.01 240); /* #F3F4F6 */
+  
+  /* Semantic colors */
+  --color-info: oklch(72% 0.19 222);           /* #3ABFF8 */
+  --color-info-content: oklch(100% 0 0);       /* #ffffff */
+  --color-success: oklch(70% 0.20 158);        /* #10B981 */
+  --color-success-content: oklch(100% 0 0);    /* #ffffff */
+  --color-warning: oklch(75% 0.18 85);         /* #F59E0B */
+  --color-warning-content: oklch(100% 0 0);    /* #ffffff */
+  --color-error: oklch(65% 0.24 29);           /* #EF4444 */
+  --color-error-content: oklch(100% 0 0);      /* #ffffff */
+
+  /* Border radius */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+
+  /* Base sizes */
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  /* Border */
+  --border: 1px;
+
+  /* Effects */
+  --depth: 1;
+  --noise: 0;
+}
+
+/* XPTrackr Dark Theme */
+@plugin "daisyui/theme" {
+  name: "xptrackrdark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  /* Base colors */
+  --color-base-100: oklch(20% 0.02 240);       /* #111827 */
+  --color-base-200: oklch(25% 0.02 240);       /* #1F2937 */
+  --color-base-300: oklch(32% 0.02 240);       /* #374151 */
+  --color-base-content: oklch(98% 0.005 240);  /* #F9FAFB */
+  
+  /* Primary - Confident Blue (lighter for dark mode) */
+  --color-primary: oklch(70% 0.18 259);        /* #60A5FA */
+  --color-primary-content: oklch(100% 0 0);    /* #ffffff */
+  
+  /* Secondary - Grit Purple (lighter for dark mode) */
+  --color-secondary: oklch(71% 0.20 295);      /* #A78BFA */
+  --color-secondary-content: oklch(100% 0 0);  /* #ffffff */
+  
+  /* Accent - Motivational Amber */
+  --color-accent: oklch(83% 0.16 85);          /* #FBBF24 */
+  --color-accent-content: oklch(0% 0 0);       /* #000000 */
+  
+  /* Neutral */
+  --color-neutral: oklch(92% 0.006 240);       /* #E5E7EB */
+  --color-neutral-content: oklch(20% 0.02 240); /* #111827 */
+  
+  /* Semantic colors (adjusted for dark mode) */
+  --color-info: oklch(72% 0.19 222);           /* #3ABFF8 */
+  --color-info-content: oklch(100% 0 0);       /* #ffffff */
+  --color-success: oklch(75% 0.18 158);        /* #34D399 */
+  --color-success-content: oklch(100% 0 0);    /* #ffffff */
+  --color-warning: oklch(83% 0.16 85);         /* #FBBF24 */
+  --color-warning-content: oklch(0% 0 0);      /* #000000 */
+  --color-error: oklch(75% 0.20 29);           /* #F87171 */
+  --color-error-content: oklch(100% 0 0);      /* #ffffff */
+
+  /* Border radius */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+
+  /* Base sizes */
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  /* Border */
+  --border: 1px;
+
+  /* Effects */
+  --depth: 1;
+  --noise: 0;
+}
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Custom color extensions for XPTrackr */
+    --color-grit: #8B5CF6;
+    --color-grit-50: #F5F3FF;
+    --color-grit-100: #EDE9FE;
+    --color-grit-200: #DDD6FE;
+    --color-grit-300: #C4B5FD;
+    --color-grit-400: #A78BFA;
+    --color-grit-500: #8B5CF6;
+    --color-grit-600: #7C3AED;
+    --color-grit-700: #6D28D9;
+    --color-grit-800: #5B21B6;
+    --color-grit-900: #4C1D95;
+    
+    /* Level tier colors */
+    --color-tier-bronze: #CD7F32;
+    --color-tier-silver: #C0C0C0;
+    --color-tier-gold: #FFD700;
+    --color-tier-platinum: #E5E4E2;
+    --color-tier-diamond: #B9F2FF;
+    --color-tier-obsidian: #1C1917;
+    
+    /* Habit status colors */
+    --color-habit-complete: #10B981;
+    --color-habit-partial: #3B82F6;
+    --color-habit-missed: #EF4444;
+    --color-habit-streak: #FFD700;
 }
