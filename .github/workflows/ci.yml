@@ -22,7 +22,7 @@ jobs:
         coverage: none
 
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -65,7 +65,7 @@ jobs:
         coverage: xdebug
 
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -105,7 +105,7 @@ jobs:
       run: ./vendor/bin/pest --coverage-text --coverage-clover=coverage.xml
 
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       if: success()
       with:
         files: ./coverage.xml
@@ -140,7 +140,7 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql, pdo_mysql, bcmath, intl, gd
 
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -148,7 +148,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Cache NPM dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -222,14 +222,14 @@ jobs:
 
     - name: Upload Screenshots
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: screenshots
         path: tests/Browser/screenshots
 
     - name: Upload Console Logs
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: console
         path: tests/Browser/console
