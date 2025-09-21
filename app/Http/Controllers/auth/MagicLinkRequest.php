@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\MagicLink;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,13 @@ class MagicLinkRequest extends Controller
             'email' => $request->email,
         ]);
 
-        $user->save();
+        // Create magic link
+        $magicLink = MagicLink::create([
+            'user_id' => $user->id,
+        ]);
 
-        return redirect()->route('home')->with('success', 'Magic link sent! Check your email.');
+        // TODO: Send notification with magic link
+
+        return redirect()->route('home')->with('success', 'Magic link sent!');
     }
 }
