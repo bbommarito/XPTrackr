@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUuids;
+    use HasFactory, HasUuids, Notifiable;
 
     /**
      * The "booted" method of the model.
@@ -22,7 +22,7 @@ class User extends Authenticatable
     {
         static::creating(function ($user) {
             // If username is not provided, derive it from email
-            if (empty($user->username) && !empty($user->email)) {
+            if (empty($user->username) && ! empty($user->email)) {
                 $user->username = strstr($user->email, '@', true);
             }
         });
