@@ -5,6 +5,7 @@ namespace App\Http\Controllers\auth;
 use App\Http\Controllers\Controller;
 use App\Models\MagicLink;
 use App\Models\User;
+use App\Notifications\MagicLinkNotification;
 use Illuminate\Http\Request;
 
 class MagicLinkRequest extends Controller
@@ -23,7 +24,8 @@ class MagicLinkRequest extends Controller
             'user_id' => $user->id,
         ]);
 
-        // TODO: Send notification with magic link
+        // Send notification with magic link
+        $user->notify(new MagicLinkNotification($magicLink));
 
         return redirect()->route('home')->with('success', 'Magic link sent!');
     }

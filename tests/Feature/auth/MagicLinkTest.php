@@ -33,4 +33,19 @@ describe('Magic Link Authentication - Happy Paths', function () {
             ->and($magicLink->used)->toBeFalse();
     });
 
+    test('user can request magic link with valid email', function () {
+        Notification::fake();
+
+        $response = $this->post(route('magic-link.request'), [
+            'email' => 'john@example.com',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success', 'Magic link sent!');
+
+        Notification::assertSentTo(
+            User::where('email', 'john@example.com')->first(),
+            \App\Notifications\MagicLinkNotification::class
+        );
+    });
 });
