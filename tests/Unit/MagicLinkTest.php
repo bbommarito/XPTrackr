@@ -16,10 +16,10 @@ describe('MagicLink Model - Happy Paths', function () {
             'used' => false,
         ]);
 
-        expect($magicLink->user_id)->toBe($user->id);
-        expect($magicLink->token)->toBe('unique-token-123');
-        expect($magicLink->used)->toBeFalse();
-        expect($magicLink->expires_at)->not->toBeNull();
+        expect($magicLink->user_id)->toBe($user->id)
+            ->and($magicLink->token)->toBe('unique-token-123')
+            ->and($magicLink->used)->toBeFalse()
+            ->and($magicLink->expires_at)->not->toBeNull();
     });
 
     test('magic link belongs to user', function () {
@@ -57,13 +57,15 @@ describe('MagicLink Model - Happy Paths', function () {
             // Not providing token - should auto-generate
         ]);
 
-        expect($magicLink->token)->not->toBeEmpty();
-        expect(strlen($magicLink->token))->toBe(36); // UUID length
-        expect($magicLink->token)->toMatch('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i');
+        expect($magicLink->token)->not->toBeEmpty()
+            ->and(strlen($magicLink->token))->toBe(36)
+            ->and($magicLink->token)->toMatch('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i');
+        // UUID length
     });
 
     test('sets expires_at to 15 minutes from now automatically', function () {
-        $this->freezeTime();
+        // Freeze time to a specific date/time to avoid timezone and day-change issues
+        $this->travelTo('2025-01-15 10:00:00');
 
         $user = User::factory()->create();
 
@@ -73,10 +75,10 @@ describe('MagicLink Model - Happy Paths', function () {
         ]);
 
         expect($magicLink->expires_at)
-            ->toBeInstanceOf(\Carbon\Carbon::class);
+            ->toBeInstanceOf(\Carbon\Carbon::class)
+            ->and($magicLink->expires_at->format('Y-m-d H:i:s'))->toBe('2025-01-15 10:15:00');
 
-        // Compare timestamps at second precision
-        expect($magicLink->expires_at->timestamp)->toBe(now()->addMinutes(15)->timestamp);
+        // Time is automatically reset after the test
     });
 });
 
